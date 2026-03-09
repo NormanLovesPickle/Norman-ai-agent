@@ -7,3 +7,4 @@ branch:
         event: web_trigger_one
         env:
           CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env.yml
+          CONFIG_SSH: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env_ssh.yml

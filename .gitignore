@@ -1,4 +1,6 @@
 ### CUSTOM ###
+env.yml
+env_ssh.yml
 norman-ai-agent-frontend/.vite/
 norman-ai-agent-frontend/node_modules/
 

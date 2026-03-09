@@ -6,6 +6,8 @@
 
 **必须包含：** `allow_slugs`、`allow_events`、`allow_branches`（web_trigger 不可信事件必需）；`PRIVATE_KEY` 须为单行双引号格式（含 `\n`），勿用多行块。
 
+**env_ssh.yml**：用于 deploy 插件，需额外声明 `allow_images: "tencentcom/ssh"`，`PRIVATE_KEY` 用多行块格式（2 空格缩进）。
+
 ## 2. 提交代码
 
 确保以下文件在 master/main 分支：

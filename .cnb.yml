@@ -8,6 +8,7 @@
         DOCKER_IMAGE_VERSION: ${CNB_BRANCH}-${CNB_COMMIT}
         DOCKER_IMAGE_NAME: norman-ai-agent
         CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env.yml
+        CONFIG_SSH: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env_ssh.yml
       docker:
         image: maven:3.9.6-eclipse-temurin-21
         volumes:
@@ -43,12 +44,14 @@
             - docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
         - name: deploy to server
           image: tencentcom/ssh
+          imports:
+            - ${CONFIG_SSH}
           settings:
             host:
               - ${BACKEND_SSH_IP}
             username: root
             port: ${BACKEND_SSH_PORT}
-            key: $PRIVATE_KEY
+            key: ${PRIVATE_KEY}
             command_timeout: 2m
             script:
               - docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker stop
