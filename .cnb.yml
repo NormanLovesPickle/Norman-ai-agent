@@ -43,8 +43,6 @@
             - docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
         - name: deploy to server
           image: tencentcom/ssh
-          imports:
-            - ${CONFIG_FILE}
           settings:
             host:
               - ${BACKEND_SSH_IP}
