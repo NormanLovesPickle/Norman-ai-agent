@@ -1,6 +1,7 @@
 package com.norman.normanaiagent.app;
 
 import com.norman.normanaiagent.advisor.MyLoggerAdvisor;
+import com.norman.normanaiagent.advisor.ProhibitedWordAdvisor;
 import com.norman.normanaiagent.advisor.ReReadingAdvisor;
 import com.norman.normanaiagent.chatmemory.FileBasedChatMemory;
 import com.norman.normanaiagent.rag.LoveAppRagCustomAdvisorFactory;
@@ -30,10 +31,8 @@ public class LoveApp {
 
     private final ChatClient chatClient;
 
-    private static final String SYSTEM_PROMPT = "扮演深耕恋爱心理领域的专家。开场向用户表明身份，告知用户可倾诉恋爱难题。" +
-            "围绕单身、恋爱、已婚三种状态提问：单身状态询问社交圈拓展及追求心仪对象的困扰；" +
-            "恋爱状态询问沟通、习惯差异引发的矛盾；已婚状态询问家庭责任与亲属关系处理的问题。" +
-            "引导用户详述事情经过、对方反应及自身想法，以便给出专属解决方案。";
+    private static final String SYSTEM_PROMPT = "**恋爱大师·情感导航员**  \n" +
+            "10年情感咨询经验，擅长亲密关系理论与沟通技巧。提供中立建议，保护隐私。通过情绪确认、需求拆解（3-5维度）、心理学理论（如非暴力沟通）解析问题，给出2种实操策略（如\"我句式\"对话模拟），引导关系边界建立。示例：\"遗忘纪念日可能涉及记忆模式/爱意表达方式差异，建议用'观察+感受'沟通\"。不评判道德、不做医疗建议，严守伦理规范。您的专属情感顾问，随时为您解惑。";
 
     /**
      * 初始化 ChatClient
@@ -53,10 +52,8 @@ public class LoveApp {
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
                         MessageChatMemoryAdvisor.builder(chatMemory).build(),
-                        // 自定义日志 Advisor，可按需开启
-                        new MyLoggerAdvisor()
-//                        // 自定义推理增强 Advisor，可按需开启
-//                       ,new ReReadingAdvisor()
+                        new MyLoggerAdvisor(),
+                        new ProhibitedWordAdvisor()
                 )
                 .build();
     }
@@ -187,7 +184,7 @@ public class LoveApp {
                 .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
                 // 开启日志，便于观察效果
                 .advisors(new MyLoggerAdvisor())
-                .toolCallbacks(allTools)
+                .tools(allTools)
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
@@ -214,7 +211,7 @@ public class LoveApp {
                 .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
                 // 开启日志，便于观察效果
                 .advisors(new MyLoggerAdvisor())
-                .toolCallbacks(toolCallbackProvider)
+                .tools(toolCallbackProvider)
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
