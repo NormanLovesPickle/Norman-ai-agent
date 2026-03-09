@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="chat-container">
     <!-- 聊天记录区域 -->
     <div class="chat-messages" ref="messagesContainer">
@@ -67,7 +67,7 @@ const props = defineProps({
   },
   aiType: {
     type: String,
-    default: 'default'  // 'love' 或 'super'
+    default: 'default'  // 'career' 或 'super'
   }
 })
 
@@ -76,11 +76,10 @@ const emit = defineEmits(['send-message'])
 const inputMessage = ref('')
 const messagesContainer = ref(null)
 
-// 根据AI类型选择不同头像
 const aiAvatar = computed(() => {
-  return props.aiType === 'love' 
-    ? '/ai-love-avatar.png'  // 恋爱大师头像
-    : '/ai-super-avatar.png' // 超级智能体头像
+  return props.aiType === 'career' 
+    ? '/ai-career-avatar.png'
+    : '/ai-super-avatar.png'
 })
 
 // 发送消息

@@ -1,4 +1,4 @@
-﻿import axios from 'axios'
+import axios from 'axios'
 
 // 根据环境变量设置 API 基础 URL
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
@@ -44,9 +44,9 @@ export const connectSSE = (url, params, onMessage, onError) => {
   return eventSource
 }
 
-// AI恋爱大师聊天
-export const chatWithLoveApp = (message, chatId) => {
-  return connectSSE('/ai/love_app/chat/sse', { message, chatId })
+// AI职场导师聊天
+export const chatWithCareerMentor = (message, chatId) => {
+  return connectSSE('/ai/career_mentor/chat/sse', { message, chatId })
 }
 
 // AI超级智能体聊天
@@ -55,6 +55,6 @@ export const chatWithManus = (message) => {
 }
 
 export default {
-  chatWithLoveApp,
+  chatWithCareerMentor,
   chatWithManus
 } 

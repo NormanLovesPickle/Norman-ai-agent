@@ -1,7 +1,9 @@
 package com.norman.normanaiagent.controller;
 
+import com.norman.normanaiagent.agent.NormanHealthAssistant;
 import com.norman.normanaiagent.agent.NormanManus;
-import com.norman.normanaiagent.app.LoveApp;
+import com.norman.normanaiagent.agent.QuizAssistant;
+import com.norman.normanaiagent.app.CareerMentorApp;
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.tool.ToolCallback;
@@ -20,7 +22,7 @@ import java.io.IOException;
 public class AiController {
 
     @Resource
-    private LoveApp loveApp;
+    private CareerMentorApp careerMentorApp;
 
     @Resource
     private ToolCallback[] allTools;
@@ -28,58 +30,28 @@ public class AiController {
     @Resource
     private ChatModel dashscopeChatModel;
 
-    /**
-     * 同步调用 AI 恋爱大师应用
-     *
-     * @param message
-     * @param chatId
-     * @return
-     */
-    @GetMapping("/love_app/chat/sync")
-    public String doChatWithLoveAppSync(String message, String chatId) {
-        return loveApp.doChat(message, chatId);
+    @GetMapping("/career_mentor/chat/sync")
+    public String doChatWithCareerMentorSync(String message, String chatId) {
+        return careerMentorApp.doChat(message, chatId);
     }
 
-    /**
-     * SSE 流式调用 AI 恋爱大师应用
-     *
-     * @param message
-     * @param chatId
-     * @return
-     */
-    @GetMapping(value = "/love_app/chat/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> doChatWithLoveAppSSE(String message, String chatId) {
-        return loveApp.doChatByStream(message, chatId);
+    @GetMapping(value = "/career_mentor/chat/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> doChatWithCareerMentorSSE(String message, String chatId) {
+        return careerMentorApp.doChatByStream(message, chatId);
     }
 
-    /**
-     * SSE 流式调用 AI 恋爱大师应用
-     *
-     * @param message
-     * @param chatId
-     * @return
-     */
-    @GetMapping(value = "/love_app/chat/server_sent_event")
-    public Flux<ServerSentEvent<String>> doChatWithLoveAppServerSentEvent(String message, String chatId) {
-        return loveApp.doChatByStream(message, chatId)
+    @GetMapping(value = "/career_mentor/chat/server_sent_event")
+    public Flux<ServerSentEvent<String>> doChatWithCareerMentorServerSentEvent(String message, String chatId) {
+        return careerMentorApp.doChatByStream(message, chatId)
                 .map(chunk -> ServerSentEvent.<String>builder()
                         .data(chunk)
                         .build());
     }
 
-    /**
-     * SSE 流式调用 AI 恋爱大师应用
-     *
-     * @param message
-     * @param chatId
-     * @return
-     */
-    @GetMapping(value = "/love_app/chat/sse_emitter")
-    public SseEmitter doChatWithLoveAppServerSseEmitter(String message, String chatId) {
-        // 创建一个超时时间较长的 SseEmitter
-        SseEmitter sseEmitter = new SseEmitter(180000L); // 3 分钟超时
-        // 获取 Flux 响应式数据流并且直接通过订阅推送给 SseEmitter
-        loveApp.doChatByStream(message, chatId)
+    @GetMapping(value = "/career_mentor/chat/sse_emitter")
+    public SseEmitter doChatWithCareerMentorServerSseEmitter(String message, String chatId) {
+        SseEmitter sseEmitter = new SseEmitter(180000L);
+        careerMentorApp.doChatByStream(message, chatId)
                 .subscribe(chunk -> {
                     try {
                         sseEmitter.send(chunk);
@@ -101,5 +73,17 @@ public class AiController {
     public SseEmitter doChatWithManus(String message) {
         NormanManus normanManus = new NormanManus(allTools, dashscopeChatModel);
         return normanManus.runStream(message);
+    }
+
+    @GetMapping("/quiz/chat")
+    public SseEmitter doChatWithQuiz(String message) {
+        QuizAssistant quizAssistant = new QuizAssistant(allTools, dashscopeChatModel);
+        return quizAssistant.runStream(message);
+    }
+
+    @GetMapping("/health/chat")
+    public SseEmitter doChatWithHealthAssistant(String message) {
+        NormanHealthAssistant healthAssistant = new NormanHealthAssistant(allTools, dashscopeChatModel);
+        return healthAssistant.runStream(message);
     }
 }

@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
@@ -7,16 +7,16 @@ const routes = [
     component: () => import('../views/Home.vue'),
     meta: {
       title: '首页 - NormanAI超级智能体应用平台',
-      description: 'NormanAI超级智能体应用平台提供AI恋爱大师和AI超级智能体服务，满足您的各种AI对话需求'
+      description: 'NormanAI超级智能体应用平台提供AI职场导师和AI超级智能体服务，满足您的各种AI对话需求'
     }
   },
   {
-    path: '/love-master',
-    name: 'LoveMaster',
-    component: () => import('../views/LoveMaster.vue'),
+    path: '/career-mentor',
+    name: 'CareerMentor',
+    component: () => import('../views/CareerMentor.vue'),
     meta: {
-      title: 'AI恋爱大师 - NormanAI超级智能体应用平台',
-      description: 'AI恋爱大师是NormanAI超级智能体应用平台的专业情感顾问，帮你解答各种恋爱问题，提供情感建议'
+      title: 'AI职场导师 - NormanAI超级智能体应用平台',
+      description: 'AI职场导师是NormanAI超级智能体应用平台的专业职业顾问，帮你解答求职、面试、晋升等职场问题'
     }
   },
   {

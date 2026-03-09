@@ -4,12 +4,9 @@ import com.norman.normanaiagent.advisor.MyLoggerAdvisor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.tool.ToolCallback;
-import org.springframework.stereotype.Component;
-
 /**
  * Norman的 AI 超级智能体（拥有自主规划能力，可以直接使用）
  */
-@Component
 public class NormanManus extends ToolCallAgent {
 
     public NormanManus(ToolCallback[] allTools, ChatModel dashscopeChatModel) {

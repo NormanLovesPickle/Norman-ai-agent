@@ -20,7 +20,7 @@ import static org.springframework.ai.vectorstore.pgvector.PgVectorStore.PgIndexT
 public class PgVectorVectorStoreConfig {
 
     @Resource
-    private LoveAppDocumentLoader loveAppDocumentLoader;
+    private CareerMentorDocumentLoader careerMentorDocumentLoader;
 
     @Bean
     public VectorStore pgVectorVectorStore(@Qualifier("postgresJdbcTemplate") JdbcTemplate jdbcTemplate, EmbeddingModel dashscopeEmbeddingModel) {
@@ -34,7 +34,7 @@ public class PgVectorVectorStoreConfig {
                 .maxDocumentBatchSize(10000)         // Optional: defaults to 10000
                 .build();
         // 加载文档
-        List<Document> documents = loveAppDocumentLoader.loadMarkdowns();
+        List<Document> documents = careerMentorDocumentLoader.loadMarkdowns();
         vectorStore.add(documents);
         return vectorStore;
     }

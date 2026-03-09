@@ -1,30 +1,13 @@
-﻿<template>
+<template>
   <footer class="app-footer">
     <div class="footer-content">
-      <div class="footer-section">
+      <div class="footer-section footer-center">
         <div class="footer-logo">
           <h3>NormanAI超级智能体应用平台</h3>
         </div>
         <div class="footer-links">
           <a href="#">《用户协议》</a>
           <a href="#">《隐私政策》</a>
-        </div>
-      </div>
-      
-      <div class="footer-section">
-        <h4>友情链接</h4>
-        <div class="footer-links">
-          <a href="https://www.mianshiya.com" target="_blank">面试鸭</a>
-          <a href="#" target="_blank">编程导航</a>
-          <a href="#" target="_blank">代码小抄</a>
-        </div>
-      </div>
-      
-      <div class="footer-section">
-        <h4>联系我们</h4>
-        <div class="footer-links">
-          <a href="#">商务合作</a>
-          <a href="#">站长：Norman</a>
         </div>
       </div>
     </div>
@@ -58,16 +41,17 @@ const currentYear = computed(() => new Date().getFullYear())
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 20px;
 }
 
 .footer-section {
-  flex: 1;
-  min-width: 200px;
   margin-bottom: 30px;
   padding: 0 15px;
+}
+
+.footer-center {
+  text-align: center;
 }
 
 .footer-logo h3 {
@@ -85,6 +69,7 @@ const currentYear = computed(() => new Date().getFullYear())
 .footer-links {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .footer-links a {

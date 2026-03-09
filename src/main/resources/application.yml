@@ -56,6 +56,13 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+qwen:
+  api-key: ${spring.ai.dashscope.api-key:}
+  text-model: qwen-plus
+  vision-model: qwen-vl-plus
+  video-model: qwen-vl-max-latest
+  audio-model: qwen2-audio-instruct
+
 # searchAPI
 search-api:
   api-key: z5uXFwYra3hgiaYeJYQT16BY

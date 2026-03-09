@@ -12,23 +12,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 恋爱大师应用文档加载器
- */
 @Component
 @Slf4j
-public class LoveAppDocumentLoader {
+public class CareerMentorDocumentLoader {
 
     private final ResourcePatternResolver resourcePatternResolver;
 
-    public LoveAppDocumentLoader(ResourcePatternResolver resourcePatternResolver) {
+    public CareerMentorDocumentLoader(ResourcePatternResolver resourcePatternResolver) {
         this.resourcePatternResolver = resourcePatternResolver;
     }
 
-    /**
-     * 加载多篇 Markdown 文档
-     * @return
-     */
     public List<Document> loadMarkdowns() {
         List<Document> allDocuments = new ArrayList<>();
         try {
