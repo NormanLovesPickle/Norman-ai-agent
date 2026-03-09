@@ -6,4 +6,4 @@ branch:
         description: AI职场导师与超级智能体服务
         event: web_trigger_one
         env:
-          CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/raw/main/env.yml
+          CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env.yml
