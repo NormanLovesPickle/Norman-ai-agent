@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 
@@ -34,6 +35,13 @@ public class DataSourceConfig {
     @ConditionalOnProperty(prefix = "spring.datasource.mysql", name = "url")
     public JdbcTemplate mysqlJdbcTemplate(@Qualifier("mysqlDataSource") DataSource ds) {
         return new JdbcTemplate(ds);
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnProperty(prefix = "spring.datasource.mysql", name = "url")
+    public NamedParameterJdbcTemplate mysqlNamedParameterJdbcTemplate(@Qualifier("mysqlDataSource") DataSource ds) {
+        return new NamedParameterJdbcTemplate(ds);
     }
 
     @Bean
