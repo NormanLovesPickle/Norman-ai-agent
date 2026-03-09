@@ -1,20 +1,9 @@
-# .cnb/web_trigger.yml - 构建按钮与变量
-# pipeline_env 的 value 需替换为你们公司 CNB 密钥仓库中的配置文件 URL
+# .cnb/web_trigger.yml - 构建按钮
 
 branch:
   - buttons:
       - name: 构建 Norman AI Agent
         description: AI职场导师与超级智能体服务
         event: web_trigger_one
-        inputs:
-          pipeline_env:
-            description: 部署环境配置（需先在CNB创建密钥仓库并上传test_env.yml、prod_env.yml）
-            required: true
-            type: select
-            options:
-              - name: 测试环境
-                value: https://cnb.cool/REPLACE_GROUP/REPLACE_KEY_REPO/secret/-/raw/main/test_env.yml
-                description: 测试环境
-              - name: 生产环境
-                value: https://cnb.cool/REPLACE_GROUP/REPLACE_KEY_REPO/secret/-/raw/main/prod_env.yml
-                description: 生产环境
+        env:
+          CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/47651a2b4cd67c44a002316c2df140639f9ccadc/env.yml
