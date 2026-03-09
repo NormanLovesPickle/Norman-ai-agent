@@ -68,6 +68,7 @@ logging:
     org.springframework.ai: DEBUG
 
 # 多数据源配置（在 application-local.yml 中配置，启用 MySQL/PostgreSQL 时需填写）
+# 启用 MySQL 后需执行 sql/chatmemory.sql 建表
 # spring:
 #   datasource:
 #     mysql:
