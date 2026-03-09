@@ -1,4 +1,4 @@
-﻿spring:
+spring:
   application:
     name: norman-ai-agent
   profiles:
@@ -64,3 +64,15 @@ search-api:
 logging:
   level:
     org.springframework.ai: DEBUG
+
+# 多数据源配置（在 application-local.yml 中配置，启用 MySQL/PostgreSQL 时需填写）
+# spring:
+#   datasource:
+#     mysql:
+#       url: jdbc:mysql://localhost:3306/norman_ai?useSSL=false&serverTimezone=Asia/Shanghai
+#       username: root
+#       password: xxx
+#     postgres:
+#       url: jdbc:postgresql://localhost:5432/postgres
+#       username: postgres
+#       password: xxx
