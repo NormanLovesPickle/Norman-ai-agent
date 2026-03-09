@@ -52,24 +52,16 @@
             port: ${BACKEND_SSH_PORT}
             key: $PRIVATE_KEY
             command_timeout: 2m
-          script: |
-            docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker stop
-            docker rm -f ${DOCKER_IMAGE_NAME} | true
-            docker rmi -f $(docker images | grep ${DOCKER_IMAGE_NAME} | awk '{print \$3}') | true
-            docker login docker.cnb.cool -u cnb -p ${DOCKER_TOKEN}
-            mkdir -p /home/norman-ai-agent/logs
-            chmod 777 /home/norman-ai-agent/logs
-            docker run -id --log-opt max-size=100m --restart always \
-              -p 8123:8123 \
-              -v /home/norman-ai-agent/logs:/app/logs \
-              -e SPRING_PROFILES_ACTIVE='${SPRING_PROFILES_ACTIVE}' \
-              -e SPRING_AI_DASHSCOPE_API_KEY='${DASHSCOPE_API_KEY}' \
-              -e SERVER_PORT=8123 \
-              -e JAVA_OPTS='-Xmx700m -Xms256m' \
-              --name ${DOCKER_IMAGE_NAME} \
-              ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
-            sleep 10
-            docker ps | grep ${DOCKER_IMAGE_NAME}
+            script:
+              - docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker stop
+              - docker rm -f ${DOCKER_IMAGE_NAME} || true
+              - docker rmi -f $(docker images | grep ${DOCKER_IMAGE_NAME} | awk '{print $$3}') || true
+              - docker login docker.cnb.cool -u cnb -p ${DOCKER_TOKEN}
+              - mkdir -p /home/norman-ai-agent/logs
+              - chmod 777 /home/norman-ai-agent/logs
+              - docker run -id --log-opt max-size=100m --restart always -p 8123:8123 -v /home/norman-ai-agent/logs:/app/logs -e SPRING_PROFILES_ACTIVE='${SPRING_PROFILES_ACTIVE}' -e SPRING_AI_DASHSCOPE_API_KEY='${DASHSCOPE_API_KEY}' -e SERVER_PORT=8123 -e JAVA_OPTS='-Xmx700m -Xms256m' --name ${DOCKER_IMAGE_NAME} ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+              - sleep 10
+              - docker ps | grep ${DOCKER_IMAGE_NAME}
       failStages:
         - name: notify
           script: echo "pipeline failed"
