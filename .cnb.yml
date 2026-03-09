@@ -7,7 +7,7 @@
         DOCKER_BUILD_CONTEXT: .
         DOCKER_IMAGE_VERSION: ${CNB_BRANCH}-${CNB_COMMIT}
         DOCKER_IMAGE_NAME: norman-ai-agent
-        CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/raw/47651a2b4cd67c44a002316c2df140639f9ccadc/env.yml
+        CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/raw/main/env.yml
       docker:
         image: maven:3.9.6-eclipse-temurin-21
         volumes:
