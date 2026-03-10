@@ -6,6 +6,7 @@
         DOCKER_IMAGE_VERSION: ${CNB_BRANCH}-${CNB_COMMIT}
         DOCKER_IMAGE_NAME: norman-ai-agent
         CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env.yml
+        SSH_CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env_ssh.yml
       docker:
         image: maven:3.9.6-eclipse-temurin-21
         volumes:
@@ -32,7 +33,7 @@
         - name: deploy to server
           image: tencentcom/ssh
           imports:
-            - ${CONFIG_FILE}
+            - ${SSH_CONFIG_FILE}
           settings:
             host:
               - ${BACKEND_SSH_IP}
