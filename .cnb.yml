@@ -1,6 +1,5 @@
 # .cnb.yml - Norman AI Agent 构建配置
-# 参考 CNB 文档：https://docs.cnb.cool/zh/build/file-reference.html
-# SSH 插件文档：https://cnb.cool/cnb/plugins/tencentcom/ssh
+# deploy 使用 script+openssh 替代 tencentcom/ssh 插件，避免密钥文件权限问题
 
 "**":
   web_trigger_one:
@@ -10,7 +9,6 @@
         DOCKER_IMAGE_VERSION: ${CNB_BRANCH}-${CNB_COMMIT}
         DOCKER_IMAGE_NAME: norman-ai-agent
         CONFIG_FILE: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env.yml
-        CONFIG_SSH: https://cnb.cool/pickle-2025/pickle-ai-agent-key/-/blob/main/env_ssh.yml
       docker:
         image: maven:3.9.6-eclipse-temurin-21
         volumes:
@@ -35,26 +33,23 @@
           script:
             - docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
         - name: deploy to server
-          image: tencentcom/ssh
+          image: alpine
           imports:
-            - ${CONFIG_SSH}
-          settings:
-            host:
-              - ${BACKEND_SSH_IP}
-            username: root
-            port: ${BACKEND_SSH_PORT}
-            key: $SSH_KEY
-            command_timeout: 2m
-            script:
-              - docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker stop
-              - docker rm -f ${DOCKER_IMAGE_NAME} || true
-              - docker rmi -f $(docker images | grep ${DOCKER_IMAGE_NAME} | awk '{print $$3}') || true
-              - docker login docker.cnb.cool -u cnb -p ${DOCKER_TOKEN}
-              - mkdir -p /home/norman-ai-agent/logs
-              - chmod 777 /home/norman-ai-agent/logs
-              - docker run -id --log-opt max-size=100m --restart always -p 8123:8123 -v /home/norman-ai-agent/logs:/app/logs -e SPRING_PROFILES_ACTIVE='${SPRING_PROFILES_ACTIVE}' -e SPRING_AI_DASHSCOPE_API_KEY='${DASHSCOPE_API_KEY}' -e SERVER_PORT=8123 -e JAVA_OPTS='-Xmx700m -Xms256m' --name ${DOCKER_IMAGE_NAME} ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
-              - sleep 10
-              - docker ps | grep ${DOCKER_IMAGE_NAME}
+            - ${CONFIG_FILE}
+          script:
+            - apk add --no-cache openssh-client
+            - mkdir -p ~/.ssh
+            - echo "$SSH_KEY" > ~/.ssh/id_rsa
+            - chmod 600 ~/.ssh/id_rsa
+            - |
+              ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa -p ${BACKEND_SSH_PORT} root@${BACKEND_SSH_IP} "docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print \$1}' | xargs -r docker stop 2>/dev/null || true; docker rm -f ${DOCKER_IMAGE_NAME} || true; docker rmi -f \$(docker images | grep ${DOCKER_IMAGE_NAME} | awk '{print \$3}') 2>/dev/null || true; docker login docker.cnb.cool -u cnb -p ${DOCKER_TOKEN}; mkdir -p /home/norman-ai-agent/logs; chmod 777 /home/norman-ai-agent/logs; docker run -id --log-opt max-size=100m --restart always -p 8123:8123 -v /home/norman-ai-agent/logs:/app/logs -e SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} -e SPRING_AI_DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY} -e SERVER_PORT=8123 -e JAVA_OPTS='-Xmx700m -Xms256m' --name ${DOCKER_IMAGE_NAME} ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}; sleep 10; docker ps | grep ${DOCKER_IMAGE_NAME}"
+                docker login docker.cnb.cool -u cnb -p ${DOCKER_TOKEN}
+                mkdir -p /home/norman-ai-agent/logs
+                chmod 777 /home/norman-ai-agent/logs
+                docker run -id --log-opt max-size=100m --restart always -p 8123:8123 -v /home/norman-ai-agent/logs:/app/logs -e SPRING_PROFILES_ACTIVE='${SPRING_PROFILES_ACTIVE}' -e SPRING_AI_DASHSCOPE_API_KEY='${DASHSCOPE_API_KEY}' -e SERVER_PORT=8123 -e JAVA_OPTS='-Xmx700m -Xms256m' --name ${DOCKER_IMAGE_NAME} ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+                sleep 10
+                docker ps | grep ${DOCKER_IMAGE_NAME}
+              "
       failStages:
         - name: notify
           script: echo "pipeline failed"
