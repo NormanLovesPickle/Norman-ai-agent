@@ -48,7 +48,7 @@
           script:
             - mkdir -p .ssh
             - echo "$SSH_KEY" > .ssh/id_rsa
-            - chmod 600 .ssh/id_rsa
+            - chmod 644 .ssh/id_rsa
         - name: deploy to server
           image: tencentcom/ssh
           imports:
