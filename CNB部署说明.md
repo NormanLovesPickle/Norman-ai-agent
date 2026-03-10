@@ -1,25 +1,50 @@
 # CNB 部署说明
 
-## 1. 在密钥仓库创建 env.yml
+## 1. 密钥仓库配置
 
-在 CNB 密钥仓库 `pickle-ai-agent-key` 的 Web 界面新建 `env.yml`，**完整复制**本地 `env.yml` 内容粘贴保存。
+在 CNB 密钥仓库 `pickle-2025/pickle-ai-agent-key` 的 Web 界面创建两个文件：
 
-**必须包含：** `allow_slugs`、`allow_events`、`allow_branches`；`SSH_KEY`（prepare 阶段用，单行双引号含 `\n`）；`PRIVATE_KEY` 同格式；勿用多行块。
+### env.yml（无 allow_images，供流水线 script 阶段用）
 
-**env_ssh.yml**：仅 deploy 插件引用，需 `allow_images: "tencentcom/ssh"`；prepare 阶段改用 env.yml 获取 SSH_KEY。
+```yaml
+allow_slugs: "pickle-2025/norman-ai-agent"
+allow_events: "web_trigger_one"
+allow_branches: "main"
+SPRING_PROFILES_ACTIVE: "prod"
+BACKEND_SSH_IP: "你的服务器IP"
+BACKEND_SSH_PORT: "22"
+DOCKER_TOKEN: "CNB Docker 令牌"
+DASHSCOPE_API_KEY: "sk-你的阿里云API密钥"
+```
+
+### env_ssh.yml（含 allow_images，仅 deploy 插件用）
+
+```yaml
+allow_slugs: "pickle-2025/norman-ai-agent"
+allow_events: "web_trigger_one"
+allow_branches: "main"
+allow_images: "tencentcom/ssh"
+SPRING_PROFILES_ACTIVE: "prod"
+BACKEND_SSH_IP: "你的服务器IP"
+BACKEND_SSH_PORT: "22"
+SSH_KEY: |
+  -----BEGIN RSA PRIVATE KEY-----
+  你的私钥内容（每行2空格缩进）
+  -----END RSA PRIVATE KEY-----
+DOCKER_TOKEN: "CNB Docker 令牌"
+DASHSCOPE_API_KEY: "sk-你的阿里云API密钥"
+```
+
+**关键**：SSH_KEY 必须用多行块格式（`|` + 2空格缩进），与 tencentcom/ssh 插件文档一致；deploy 使用 `key: $SSH_KEY` 直接传私钥文本。
 
 ## 2. 提交代码
 
-确保以下文件在 master/main 分支：
-- `.cnb.yml`
-- `.cnb/web_trigger.yml`
-- `Dockerfile`
-- `settings.xml`
+确保 `.cnb.yml`、`.cnb/web_trigger.yml`、`Dockerfile`、`settings.xml` 在 main 分支。
 
 ## 3. 触发构建
 
-在 CNB 项目页面点击「构建 Norman AI Agent」。
+在 CNB 分支详情页点击「构建 Norman AI Agent」。
 
 ## 4. 访问服务
 
-部署成功后访问：`http://服务器IP:8123/api/doc.html`
+`http://服务器IP:8123/api/doc.html`
