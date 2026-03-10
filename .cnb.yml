@@ -44,7 +44,7 @@
             - docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
         - name: prepare ssh key
           imports:
-            - ${CONFIG_SSH}
+            - ${CONFIG_FILE}
           script:
             - mkdir -p .ssh
             - echo "$SSH_KEY" > .ssh/id_rsa
