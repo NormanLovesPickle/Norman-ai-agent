@@ -42,6 +42,13 @@
         - name: docker push
           script:
             - docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+        - name: prepare ssh key
+          imports:
+            - ${CONFIG_SSH}
+          script:
+            - mkdir -p .ssh
+            - echo "$SSH_KEY" > .ssh/id_rsa
+            - chmod 600 .ssh/id_rsa
         - name: deploy to server
           image: tencentcom/ssh
           imports:
@@ -51,7 +58,7 @@
               - ${BACKEND_SSH_IP}
             username: root
             port: ${BACKEND_SSH_PORT}
-            key: $SSH_KEY
+            key_path: .ssh/id_rsa
             command_timeout: 2m
             script:
               - docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker stop
