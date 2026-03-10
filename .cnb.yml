@@ -51,7 +51,7 @@
               - ${BACKEND_SSH_IP}
             username: root
             port: ${BACKEND_SSH_PORT}
-            key: ${PRIVATE_KEY}
+            key: $SSH_KEY
             command_timeout: 2m
             script:
               - docker ps -a | grep ${DOCKER_IMAGE_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker stop
