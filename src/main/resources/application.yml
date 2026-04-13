@@ -10,8 +10,7 @@ spring:
 #    password: 123456
   ai:
     dashscope:
-      # 需要替换为你自己的 key
-      api-key: sk-de7557a325794e94af96f0a15f1428be
+      api-key: ${SPRING_AI_DASHSCOPE_API_KEY:${DASHSCOPE_API_KEY:}}
       chat:
         options:
           model: qwen-plus
@@ -65,7 +64,7 @@ qwen:
 
 # searchAPI
 search-api:
-  api-key: z5uXFwYra3hgiaYeJYQT16BY
+  api-key: ${SEARCH_API_API_KEY:}
 # pexels 图片搜索（可选，在 application-local.yml 中配置）
 # pexels:
 #   api-key: xxx
